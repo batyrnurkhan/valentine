@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Будь моей Валентинкой? 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff6b9d;
+      --light-pink: #ffb3cc;
+      --deep: #d63a7a;
+      --cream: #fff8fb;
+      --purple: #c084fc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; min-height: 100vh;
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+
+    .bg-hearts { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .bg-heart { position: absolute; animation: floatUp linear infinite; opacity: 0; }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .card {
+      position: relative; z-index: 1;
+      background: white; border-radius: 2.5rem;
+      padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.2rem, 6vw, 3rem);
+      max-width: 440px; width: min(90vw, 440px);
+      text-align: center;
+      box-shadow: 0 4px 30px rgba(255,107,157,0.18);
+      border: 2px solid var(--light-pink);
+      animation: cardPop 0.7s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes cardPop {
+      from { transform: scale(0.6) translateY(40px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .dots { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.2rem; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--light-pink); animation: dotBounce 1.2s ease-in-out infinite; }
+    .dot:nth-child(2) { animation-delay: 0.15s; background: var(--pink); }
+    .dot:nth-child(3) { animation-delay: 0.30s; background: var(--purple); }
+    @keyframes dotBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    .main-gif {
+      width: clamp(110px, 35vw, 160px);
+      height: clamp(110px, 35vw, 160px);
+      object-fit: cover; border-radius: 50%;
+      border: 4px solid var(--light-pink);
+      box-shadow: 0 0 0 6px #ffe4f0;
+      margin: 0 auto 1.2rem; display: block;
+      transition: transform 0.3s;
+    }
+    .main-gif:hover { transform: scale(1.05) rotate(-2deg); }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.2rem, 4.5vw, 1.6rem);
+      color: var(--deep); line-height: 1.3; margin-bottom: 0.5rem;
+      animation: fadeSlide 0.6s 0.4s both;
+    }
+    .subtitle {
+      color: #f9a8c9; font-size: clamp(0.8rem, 3vw, 0.95rem);
+      margin-bottom: 1.6rem; animation: fadeSlide 0.6s 0.55s both;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Кнопки — оба слота одинакового размера */
+    .btns {
+      display: flex; gap: clamp(0.5rem, 2vw, 1rem);
+      justify-content: center; align-items: center;
+      animation: fadeSlide 0.6s 0.7s both;
+    }
+
+    /* Общий стиль кнопок — одинаковый для ДА и НЕТ */
+    .btn {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1.2rem, 4vw, 1.8rem);
+      border-radius: 999px; cursor: pointer; outline: none;
+      white-space: nowrap; border: none;
+    }
+    .btn-yes {
+      background: linear-gradient(135deg, var(--pink), var(--deep));
+      color: white; box-shadow: 0 4px 18px rgba(214,58,122,0.35);
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+    .btn-yes:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 8px 24px rgba(214,58,122,0.45); }
+    .btn-no-style {
+      background: #fff0f5; color: var(--deep);
+      border: 2px solid var(--light-pink) !important;
+      box-shadow: 0 2px 8px rgba(255,107,157,0.1);
+    }
+    .btn-close { background: #fff0f5; color: var(--deep); border: 2px solid var(--light-pink) !important; }
+
+    /* Placeholder точно копирует стиль кнопки НЕТ — одинаковый размер */
+    #noPlaceholder {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1.2rem, 4vw, 1.8rem);
+      border-radius: 999px;
+      white-space: nowrap;
+      border: 2px solid transparent;
+      visibility: hidden;
+      /* не кликабелен */
+      pointer-events: none;
+      /* такой же текст чтобы размер совпадал */
+    }
+
+    /* Кнопка НЕТ — fixed, на уровне body */
+    #noBtn {
+      font-family: 'Nunito', sans-serif; font-weight: 700;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1.2rem, 4vw, 1.8rem);
+      border-radius: 999px; cursor: pointer; outline: none;
+      background: #fff0f5; color: var(--deep);
+      border: 2px solid var(--light-pink);
+      box-shadow: 0 2px 8px rgba(255,107,157,0.1);
+      position: fixed; z-index: 50;
+      visibility: hidden;
+      white-space: nowrap;
+    }
+    #noBtn:hover { background: #ffe0ee; }
+
+    .credit { position: fixed; bottom: 0.8rem; font-size: 0.75rem; color: #f9a8c9; z-index: 1; text-align: center; padding: 0 1rem; }
+    .credit a { color: var(--pink); text-decoration: none; font-weight: 700; }
+
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(255,200,220,0.55); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.35s;
+      padding: 1rem;
+    }
+    .overlay.show { opacity: 1; pointer-events: all; }
+    .modal {
+      background: white; border-radius: 2rem;
+      padding: clamp(1.2rem, 4vw, 1.8rem) clamp(1rem, 4vw, 1.8rem);
+      max-width: 380px; width: 100%; text-align: center;
+      box-shadow: 0 8px 40px rgba(255,107,157,0.25); border: 2px solid var(--light-pink);
+      transform: scale(0.8); transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+    }
+    .overlay.show .modal { transform: scale(1); }
+    .modal-gif {
+      width: clamp(90px, 28vw, 130px); height: clamp(90px, 28vw, 130px);
+      object-fit: cover; border-radius: 50%;
+      border: 4px solid var(--light-pink); box-shadow: 0 0 0 5px #ffe4f0;
+      margin: 0 auto 1rem; display: block;
+    }
+    .modal h2 { font-family: 'Pacifico', cursive; color: var(--deep); font-size: clamp(1.1rem, 4vw, 1.5rem); margin-bottom: 0.4rem; }
+    .modal p  { color: #f06ca0; font-size: clamp(0.8rem, 2.5vw, 0.9rem); margin-bottom: 1.2rem; }
+    .modal .btns { animation: none; flex-wrap: wrap; gap: 0.5rem; }
+    .modal .btn { font-size: clamp(0.75rem, 2.5vw, 0.9rem); padding: clamp(0.4rem, 1.5vw, 0.6rem) clamp(0.7rem, 2.5vw, 1.2rem); flex: 1 1 auto; min-width: 0; }
+
+    .confetti-piece {
+      position: fixed; border-radius: 2px; opacity: 0;
+      pointer-events: none; z-index: 200;
+      animation: confettiFall 1.2s ease-in forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(80vh) rotate(720deg); opacity: 0; }
+    }
+
+    @media (max-width: 400px) {
+      .card { border-radius: 1.8rem; }
+      h1 { font-size: 1.1rem; }
+      .modal { border-radius: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-hearts" id="bgHearts"></div>
+
+  <div class="card">
+    <div class="dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <img class="main-gif"
+      src="https://github.com/NikhilMarko03/resources/blob/main/happy1.gif?raw=true"
+      alt="милый мишка" />
+    <h1>Будешь моей Валентинкой? 🥺</h1>
+    <p class="subtitle">Ну пожалуйста, очень прошу 🍒</p>
+    <div class="btns">
+      <button class="btn btn-yes" onclick="onYes()">Да 🥰</button>
+      <!-- placeholder с тем же текстом и стилями — чтоб размер точно совпадал -->
+      <div id="noPlaceholder">Нет 😭</div>
+    </div>
+  </div>
+
+  <!-- Кнопка НЕТ на уровне body -->
+  <button id="noBtn" onclick="onNo()">Нет 😭</button>
+
+  <!-- Оверлей ДА -->
+  <div class="overlay" id="yesOverlay">
+    <div class="modal">
+      <video class="modal-gif" autoplay loop muted playsinline>
+        <source src="IMG_2232.MOV" type="video/mp4" />
+      </video>
+      <h2>Ура!! Я тебя люблю 😘</h2>
+      <p>Ты сделала меня самым счастливым 💕</p>
+      <button class="btn btn-yes" onclick="onLoveYouToo()">Я тебя тоже люблю 🥰</button>
+    </div>
+  </div>
+
+  <!-- Оверлей НЕТ -->
+  <div class="overlay" id="noOverlay">
+    <div class="modal">
+      <img class="modal-gif" id="noModalImg"
+        src="https://media1.tenor.com/images/9413ffc5a11722a3cc456a88810750bd/tenor.gif?itemid=14193216"
+        alt="грустный" />
+      <h2 id="noTitle">Пожалуйста? 🥺</h2>
+      <p id="noSub">Я буду очень грустить если ты откажешь...</p>
+      <div class="btns">
+        <button class="btn btn-yes" onclick="onYesFromNo()">Ладно, да 🥰</button>
+        <button class="btn btn-close" onclick="closeNoOverlay()">Закрыть 😶</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="credit">Сделано с ❤️ для тебя</p>
+
+<script>
+  // Плавающие сердечки
+  const bgHearts = document.getElementById('bgHearts');
+  const heartEmojis = ['❤️','🩷','💕','💖','💗','💓','🌸','✨'];
+  for (let i = 0; i < 22; i++) {
+    const h = document.createElement('span');
+    h.className = 'bg-heart';
+    h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+    h.style.animationDuration = (6 + Math.random() * 10) + 's';
+    h.style.animationDelay = (Math.random() * 12) + 's';
+    bgHearts.appendChild(h);
+  }
+
+  // Кнопка НЕТ — позиционируем точно поверх placeholder
+  const noBtn = document.getElementById('noBtn');
+  const placeholder = document.getElementById('noPlaceholder');
+  let origLeft, origTop;
+  let escapeCount = 0;
+  let cooldown = false;
+
+  function alignNoBtn() {
+    const r = placeholder.getBoundingClientRect();
+    origLeft = r.left;
+    origTop  = r.top;
+    // точно те же размеры что у placeholder
+    noBtn.style.width  = r.width  + 'px';
+    noBtn.style.height = r.height + 'px';
+    noBtn.style.left   = origLeft + 'px';
+    noBtn.style.top    = origTop  + 'px';
+    noBtn.style.visibility = 'visible';
+  }
+
+  // Запускаем после того как карточка появилась (анимация 0.7s)
+  setTimeout(alignNoBtn, 750);
+
+  // При ресайзе — сброс и возврат на место
+  window.addEventListener('resize', () => {
+    escapeCount = 0;
+    cooldown = false;
+    noBtn.style.transition = '';
+    alignNoBtn();
+  });
+
+  // Убегание при приближении курсора
+  document.addEventListener('mousemove', (e) => {
+    if (cooldown) return;
+
+    const r   = noBtn.getBoundingClientRect();
+    const cx  = r.left + r.width  / 2;
+    const cy  = r.top  + r.height / 2;
+    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+
+    if (dist > 55) return;
+
+    cooldown = true;
+    escapeCount++;
+
+    if (escapeCount % 4 === 0) {
+      noBtn.style.transition = 'left 0.5s cubic-bezier(.34,1.56,.64,1), top 0.5s cubic-bezier(.34,1.56,.64,1)';
+      noBtn.style.left = origLeft + 'px';
+      noBtn.style.top  = origTop  + 'px';
+    } else {
+      const vw  = document.documentElement.clientWidth;
+      const vh  = document.documentElement.clientHeight;
+      const bw  = r.width;
+      const bh  = r.height;
+      const pad = 20;
+      let nx, ny, tries = 0;
+      do {
+        nx = pad + Math.random() * (vw - bw - pad * 2);
+        ny = pad + Math.random() * (vh - bh - pad * 2);
+        tries++;
+      } while (Math.hypot(nx + bw/2 - e.clientX, ny + bh/2 - e.clientY) < 150 && tries < 40);
+      nx = Math.max(pad, Math.min(nx, vw - bw - pad));
+      ny = Math.max(pad, Math.min(ny, vh - bh - pad));
+
+      noBtn.style.transition = 'left 0.18s ease-out, top 0.18s ease-out';
+      noBtn.style.left = nx + 'px';
+      noBtn.style.top  = ny + 'px';
+    }
+
+    setTimeout(() => { noBtn.style.transition = ''; cooldown = false; }, 600);
+  });
+
+  // Тач для мобильных
+  document.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
+  }, { passive: true });
+
+  // Цикл грустных сообщений
+  const sadCycles = [
+    { title: "я плачу 😭",            sub: "зачем ты так со мной..." },
+    { title: "если ещё раз... 💔",    sub: "ты серьёзно? я же всё для тебя..." },
+    { title: "но почему?? 🥺",        sub: "объясни мне пожалуйста..." },
+    { title: "но я же люблю тебя 💕", sub: "неужели это ничего не значит?" }
+  ];
+  let sadIdx = 0;
+
+  function onNo() {
+    const c = sadCycles[sadIdx % sadCycles.length];
+    sadIdx++;
+    document.getElementById('noTitle').textContent = c.title;
+    document.getElementById('noSub').textContent   = c.sub;
+    document.getElementById('noOverlay').classList.add('show');
+  }
+
+  function closeNoOverlay() {
+    document.getElementById('noOverlay').classList.remove('show');
+  }
+
+  function spawnConfetti() {
+    const colors = ['#ff6b9d','#ffb3cc','#c084fc','#fbbf24','#34d399','#60a5fa'];
+    for (let i = 0; i < 90; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.background        = colors[Math.floor(Math.random() * colors.length)];
+      c.style.left              = Math.random() * 100 + 'vw';
+      c.style.top               = '-10px';
+      c.style.width             = (8 + Math.random() * 8) + 'px';
+      c.style.height            = (8 + Math.random() * 8) + 'px';
+      c.style.animationDelay    = (Math.random() * 0.6) + 's';
+      c.style.animationDuration = (0.9 + Math.random() * 0.8) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 2000);
+    }
+  }
+
+  function onYes() {
+    spawnConfetti();
+    setTimeout(() => document.getElementById('yesOverlay').classList.add('show'), 200);
+  }
+
+  function onYesFromNo() {
+    document.getElementById('noOverlay').classList.remove('show');
+    spawnConfetti();
+    setTimeout(() => document.getElementById('yesOverlay').classList.add('show'), 300);
+  }
+
+  function onLoveYouToo() { spawnConfetti(); }
+</script>
+</body>
+</html>
