@@ -179,6 +179,35 @@
       100% { transform: translateY(80vh) rotate(720deg); opacity: 0; }
     }
 
+
+    /* ---- Фото-ряд ---- */
+    .photo-row {
+      display: flex;
+      gap: clamp(0.4rem, 2vw, 0.7rem);
+      justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+    .photo-frame {
+      width: clamp(52px, 14vw, 72px);
+      height: clamp(52px, 14vw, 72px);
+      border-radius: 1rem;
+      border: 3px solid var(--light-pink);
+      box-shadow: 0 0 0 3px #ffe4f0;
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .photo-frame:hover {
+      transform: scale(1.08) rotate(-2deg);
+      box-shadow: 0 0 0 4px var(--pink);
+    }
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     @media (max-width: 400px) {
       .card { border-radius: 1.8rem; }
       h1 { font-size: 1.1rem; }
@@ -194,9 +223,19 @@
     <div class="dots">
       <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
+    <!-- Основная гифка -->
     <img class="main-gif"
       src="https://github.com/NikhilMarko03/resources/blob/main/happy1.gif?raw=true"
       alt="милый мишка" />
+
+    <!-- 4 фото -->
+    <div class="photo-row">
+      <div class="photo-frame"><img src="photo1.jpg" alt="фото 1" /></div>
+      <div class="photo-frame"><img src="photo2.jpg" alt="фото 2" /></div>
+      <div class="photo-frame"><img src="photo3.jpg" alt="фото 3" /></div>
+      <div class="photo-frame"><img src="photo4.jpg" alt="фото 4" /></div>
+    </div>
+
     <h1>Будешь моей Валентинкой? 🥺</h1>
     <p class="subtitle">Ну пожалуйста, очень прошу 🍒</p>
     <div class="btns">
@@ -213,7 +252,7 @@
   <div class="overlay" id="yesOverlay">
     <div class="modal">
       <video class="modal-gif" autoplay loop muted playsinline>
-        <source src="index.MOV" type="video/mp4" />
+        <source src="your-video.mp4" type="video/mp4" />
       </video>
       <h2>Ура!! Я тебя люблю 😘</h2>
       <p>Ты сделала меня самым счастливым 💕</p>
@@ -382,5 +421,4 @@
   function onLoveYouToo() { spawnConfetti(); }
 </script>
 </body>
-
 </html>
